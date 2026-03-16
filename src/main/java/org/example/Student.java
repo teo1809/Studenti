@@ -7,6 +7,7 @@ public class Student {
     String prenume;
     String nume;
     String formatieDeStudiu;
+    Integer nota;
 
 
 //    @Override
@@ -19,6 +20,15 @@ public class Student {
         this.nume = nume;
         this.numarMatricol = numarMatricol;
         this.formatieDeStudiu = formatieDeStudiu;
+
+    }
+    public Student( String numarMatricol, String prenume, String nume, String formatieDeStudiu, Integer nota) {
+        this.prenume = prenume;
+        this.nume = nume;
+        this.numarMatricol = numarMatricol;
+        this.formatieDeStudiu = formatieDeStudiu;
+        this.nota=nota;
+
     }
 
     @Override

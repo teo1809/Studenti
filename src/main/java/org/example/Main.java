@@ -47,6 +47,42 @@ creeare fisier text -> studenti.CSV (comma separated values)
 
 
  //sortare dupa nume
+
+
+ citirea notelor unui student dintr-un fiiser
+ note.csv -> are
+ key, value
+ 0123, nota
+
+
+      key, value
+ Map<String, Integer> citireNote( String fileName){ citeste si creeaza map}
+
+ Map<..>=  new hashmap<>()(HASMAP/TREEMAP)
+ nu se aduaga cu add -> put
+
+ map.get(152) -> funtioneaza in o(1)
+ functie care primeste un student si returneaza nota
+
+
+ Integer nota(map<string, integer> note, Student s){
+ return note.get(Student.nrmatr);
+ }
+
+
+Student cautat= new student (null, "alex", "doro", "221")
+prezente(.. cautat) {}
+nota(  ...cautat){
+map<string,integer> citireNota()
+cream alt map
+map<student,integer> notestudenti = createMap(studenti, notestudenti(fisierele))
+}                                   facuta cu foreach
+
+createMap ai sa mearga cautarea fara sa stiu care e nrmatricol -tema
+
+
+
+
  */
 
 
@@ -54,7 +90,7 @@ public class Main {
     public static void main() {
         //Student student = new Student("3572", "Teodora", "Olteanu", "221");
         // System.out.println(student);
-        List<Student> listaDinFisier = citire("studenti.csv");
+        List<Student> listaDinFisier = citireStudenti("studenti.csv");
 
 
         afisareListaNormala(listaDinFisier);
@@ -63,6 +99,11 @@ public class Main {
 
         afisareListaSortata(listaDinFisier);
 
+        Map<String, Integer> citireNote= citireNote("noteStudenti.csv");
+
+        for (Map.Entry<String, Integer> intrare : citireNote.entrySet()) {
+            System.out.println("Student: " + intrare.getKey() + " Nota: " + intrare.getValue());
+        }
 
         List<Student> listaStudenti = new ArrayList<>();
         listaStudenti.add(new Student("0123","Andreea", "Popescu",  "221"));
@@ -84,7 +125,20 @@ public class Main {
         } else {
             System.out.println("Studentul NU este prezent!");
         }
+
+        Integer notaStudent = nota(citireNote, studentCautat);
+
+        if (notaStudent != null) {
+            System.out.println("Nota studentului " + studentCautat.getNume() + " este: " + notaStudent);
+        } else {
+            System.out.println("nu exista o nota pentru acest student! " + studentCautat.getNumarMatricol());
+        }
     }
+
+    public static Integer nota(Map<String, Integer> note, Student s){
+        return note.get(s.getNumarMatricol());
+    }
+
 
     private static void afisareListaSortata(List<Student> listaDinFisier) {
         System.out.println();
@@ -134,7 +188,7 @@ public class Main {
     public static boolean prezenta(Collection<Student> colectie, Student student) {
         return colectie.contains(student);
     }
-    public static List<Student> citire(String fileName) {
+    public static List<Student> citireStudenti(String fileName) {
         List<Student> listaCreata = new ArrayList<>();
 
         try {
@@ -162,6 +216,32 @@ public class Main {
             e.printStackTrace();
         }
         return listaCreata;
+    }
+
+    public static Map<String,Integer> citireNote(String fileName) {
+        Map<String,Integer> hartaCreata = new HashMap<>();
+
+        try {
+            File fisier = new File(fileName);
+            Scanner cititor = new Scanner(fisier);
+
+            while (cititor.hasNextLine()) {
+                String linie = cititor.nextLine();
+                String[] date = linie.split(",");
+
+                if (date.length == 2) {
+                    String nume = date[0].trim();
+                    Integer valoare = Integer.parseInt(date[1].trim());
+                    hartaCreata.put(nume, valoare);
+                }
+
+            }
+            cititor.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("nu exista fisierul");
+            e.printStackTrace();
+        }
+        return hartaCreata;
     }
 }
 
