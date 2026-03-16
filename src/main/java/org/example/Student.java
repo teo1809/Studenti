@@ -8,7 +8,13 @@ public class Student {
     String nume;
     String formatieDeStudiu;
 
-    public Student(String prenume, String nume, String numarMatricol, String formatieDeStudiu) {
+
+//    @Override
+//    public int compareTo(Student o) {
+//        return this.nume.compareTo(o.nume);
+//    }
+
+    public Student( String numarMatricol, String prenume, String nume, String formatieDeStudiu) {
         this.prenume = prenume;
         this.nume = nume;
         this.numarMatricol = numarMatricol;
@@ -27,8 +33,7 @@ public class Student {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null ) return false;
         Student student = (Student) o;
         return Objects.equals(prenume, student.prenume) &&
                 Objects.equals(nume, student.nume) &&
@@ -39,4 +44,12 @@ public class Student {
     public int hashCode() {
         return Objects.hash(prenume, nume, formatieDeStudiu);
     }
+
+
+
+    public String getNume() { return nume; }
+    public String getPrenume() { return prenume; }
+    public String getNumarMatricol() { return numarMatricol; }
+    public String getFormatieDeStudiu() { return formatieDeStudiu; }
+
 }
