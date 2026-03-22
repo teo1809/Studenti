@@ -72,13 +72,13 @@ creeare fisier text -> studenti.CSV (comma separated values)
 
 Student cautat= new student (null, "alex", "doro", "221")
 prezente(.. cautat) {}
-nota(  ...cautat){
+nota( notestudenti, cautat){
 map<string,integer> citireNota()
 cream alt map
 map<student,integer> notestudenti = createMap(studenti, notestudenti(fisierele))
 }                                   facuta cu foreach
 
-createMap ai sa mearga cautarea fara sa stiu care e nrmatricol -tema
+createMap a.i. sa mearga cautarea fara sa stiu care e nrmatricol -tema
 
 
 
