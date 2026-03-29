@@ -87,7 +87,7 @@ createMap a.i. sa mearga cautarea fara sa stiu care e nrmatricol -tema
 
 
 public class Main {
-    public static void main() {
+    public static void main(String[] args) {
         //Student student = new Student("3572", "Teodora", "Olteanu", "221");
         // System.out.println(student);
         List<Student> listaDinFisier = citireStudenti("studenti.csv");
@@ -99,17 +99,17 @@ public class Main {
 
         afisareListaSortata(listaDinFisier);
 
-        Map<String, Integer> citireNote= citireNote("noteStudenti.csv");
+        Map<String, Integer> citireNote = citireNote("noteStudenti.csv");
 
         for (Map.Entry<String, Integer> intrare : citireNote.entrySet()) {
             System.out.println("Student: " + intrare.getKey() + " Nota: " + intrare.getValue());
         }
 
         List<Student> listaStudenti = new ArrayList<>();
-        listaStudenti.add(new Student("0123","Andreea", "Popescu",  "221"));
-        listaStudenti.add(new Student("4567","Maria", "Ionescu",  "212"));
+        listaStudenti.add(new Student("0123", "Andreea", "Popescu", "221"));
+        listaStudenti.add(new Student("4567", "Maria", "Ionescu", "212"));
         listaStudenti.add(new Student("9103", "Andrei", "Traian", "211"));
-        listaStudenti.add(new Student("6216","Gabriela", "Manole", "222"));
+        listaStudenti.add(new Student("6216", "Gabriela", "Manole", "222"));
 
         Set<Student> setStudenti = new HashSet<>(listaStudenti);
 
@@ -117,7 +117,7 @@ public class Main {
 //        setStudenti.add(new Student("Maria", "Ionescu", "4567", "212"));
 //        setStudenti.add(new Student("Andrei", "Traian", "9103", "211"));
 //        setStudenti.add(new Student("Gabriela", "Manole", "6216", "222"));
-        Student studentCautat = new Student( "0123","Andreea", "Popescu", "221");
+        Student studentCautat = new Student("0123", "Andreea", "Popescu", "221");
 
         System.out.println();
         if (prezenta(setStudenti, studentCautat)) {
@@ -133,9 +133,26 @@ public class Main {
         } else {
             System.out.println("nu exista o nota pentru acest student! " + studentCautat.getNumarMatricol());
         }
+
+
+
+
+        // map pentru cautarea fara nrMatricol
+        Map<Student, Integer> mapNoteStudenti = createMapNoteStudenti(listaDinFisier, citireNote);
+
+
+        Student studentCautatFaraNrMatricol = new Student("0123", "Andreea", "Popescu", "221");
+
+        System.out.println("testare cautare nota fara nrMatricol");
+        if (mapNoteStudenti.containsKey(studentCautatFaraNrMatricol)) {
+            System.out.println("Nota pentru " + studentCautatFaraNrMatricol.getNume() +
+                    " este: " + mapNoteStudenti.get(studentCautatFaraNrMatricol));
+        } else {
+            System.out.println("studentul nu exista!");
+        }
     }
 
-    public static Integer nota(Map<String, Integer> note, Student s){
+    public static Integer nota(Map<String, Integer> note, Student s) {
         return note.get(s.getNumarMatricol());
     }
 
@@ -144,7 +161,7 @@ public class Main {
         System.out.println();
         System.out.println("studentii sortati alfabetic dupa nume:");
         for (Student s : listaDinFisier) {
-            System.out.println(s.getNume() + " " + s.getPrenume()+ " "+s.getNumarMatricol()+" "+ s.getFormatieDeStudiu());
+            System.out.println(s.getNume() + " " + s.getPrenume() + " " + s.getNumarMatricol() + " " + s.getFormatieDeStudiu());
         }
     }
 
@@ -163,8 +180,8 @@ public class Main {
         Collections.sort(listaDinFisier, new Comparator<Student>() {
             @Override
             public int compare(Student s1, Student s2) {
-               // return s1.nume.compareTo(s2.nume);//crescator; descresc inversez s1 cu s2
-                if(s1.formatieDeStudiu.equals(s2.formatieDeStudiu)){
+                // return s1.nume.compareTo(s2.nume);//crescator; descresc inversez s1 cu s2
+                if (s1.formatieDeStudiu.equals(s2.formatieDeStudiu)) {
                     return s1.nume.compareTo(s2.nume);
                 }
                 return s1.formatieDeStudiu.compareTo(s2.formatieDeStudiu);
@@ -188,6 +205,7 @@ public class Main {
     public static boolean prezenta(Collection<Student> colectie, Student student) {
         return colectie.contains(student);
     }
+
     public static List<Student> citireStudenti(String fileName) {
         List<Student> listaCreata = new ArrayList<>();
 
@@ -218,8 +236,8 @@ public class Main {
         return listaCreata;
     }
 
-    public static Map<String,Integer> citireNote(String fileName) {
-        Map<String,Integer> hartaCreata = new HashMap<>();
+    public static Map<String, Integer> citireNote(String fileName) {
+        Map<String, Integer> hartaCreata = new HashMap<>();
 
         try {
             File fisier = new File(fileName);
@@ -243,7 +261,24 @@ public class Main {
         }
         return hartaCreata;
     }
-}
 
+    /*
+      Creeaza un Map unde cheia este obiectul Student si valoarea este nota lui
+      Astfel, putem cauta nota folosind un obiect Student care are nrMatricol null
+     */
+    public static Map<Student, Integer> createMapNoteStudenti(List<Student> studenti, Map<String, Integer> noteDupaNrMatricol) {
+        Map<Student, Integer> hartaFinala = new HashMap<>();
+
+        for (Student s : studenti) {
+            // Căutăm nota în map-ul inițial folosind nrMatricol al studentului curent
+            Integer nota = noteDupaNrMatricol.get(s.getNumarMatricol());
+
+            if (nota != null) {
+                hartaFinala.put(s, nota);
+            }
+        }
+        return hartaFinala;
+    }
+}
 
 
