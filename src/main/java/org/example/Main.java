@@ -134,22 +134,12 @@ public class Main {
             System.out.println("nu exista o nota pentru acest student! " + studentCautat.getNumarMatricol());
         }
 
-
-
-
-        // map pentru cautarea fara nrMatricol
+        // map pentru cautarea studentului fara nrMatricol
         Map<Student, Integer> mapNoteStudenti = createMapNoteStudenti(listaDinFisier, citireNote);
 
+        Student studentCautatFaraNrMatricol = new Student(null, "Andreea", "Popescu", "221");
 
-        Student studentCautatFaraNrMatricol = new Student("0123", "Andreea", "Popescu", "221");
-
-        System.out.println("testare cautare nota fara nrMatricol");
-        if (mapNoteStudenti.containsKey(studentCautatFaraNrMatricol)) {
-            System.out.println("Nota pentru " + studentCautatFaraNrMatricol.getNume() +
-                    " este: " + mapNoteStudenti.get(studentCautatFaraNrMatricol));
-        } else {
-            System.out.println("studentul nu exista!");
-        }
+        printNota(mapNoteStudenti, studentCautatFaraNrMatricol);
     }
 
     public static Integer nota(Map<String, Integer> note, Student s) {
@@ -262,23 +252,32 @@ public class Main {
         return hartaCreata;
     }
 
-    /*
-      Creeaza un Map unde cheia este obiectul Student si valoarea este nota lui
-      Astfel, putem cauta nota folosind un obiect Student care are nrMatricol null
-     */
     public static Map<Student, Integer> createMapNoteStudenti(List<Student> studenti, Map<String, Integer> noteDupaNrMatricol) {
-        Map<Student, Integer> hartaFinala = new HashMap<>();
+        Map<Student, Integer> mapFinal = new HashMap<>();
 
         for (Student s : studenti) {
-            // Căutăm nota în map-ul inițial folosind nrMatricol al studentului curent
             Integer nota = noteDupaNrMatricol.get(s.getNumarMatricol());
 
             if (nota != null) {
-                hartaFinala.put(s, nota);
+                mapFinal.put(s, nota);
             }
         }
-        return hartaFinala;
+        return mapFinal;
     }
+
+    private static void printNota(Map<Student, Integer> mapNoteStudenti, Student studentCautatFaraNrMatricol) {
+        System.out.println("cautare nota fara nrMatricol");
+
+        if (mapNoteStudenti.containsKey(studentCautatFaraNrMatricol)) {
+            System.out.println("nota pentru " + studentCautatFaraNrMatricol.getNume() +
+                    " este: " + mapNoteStudenti.get(studentCautatFaraNrMatricol));
+        } else {
+            System.out.println("studentul nu exista");
+        }
+    }
+
+
+
 }
 
 
