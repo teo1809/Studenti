@@ -146,7 +146,6 @@ public class Main {
         return note.get(s.getNumarMatricol());
     }
 
-
     private static void afisareListaSortata(List<Student> listaDinFisier) {
         System.out.println();
         System.out.println("studentii sortati alfabetic dupa nume:");
