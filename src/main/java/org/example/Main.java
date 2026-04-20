@@ -165,7 +165,7 @@ public class Main {
         }
     }
 
-    private static void sortareDupaNumeSiFormatiune(List<Student> listaDinFisier) {
+    public static void sortareDupaNumeSiFormatiune(List<Student> listaDinFisier) {
         Collections.sort(listaDinFisier, new Comparator<Student>() {
             @Override
             public int compare(Student s1, Student s2) {
@@ -274,7 +274,6 @@ public class Main {
             System.out.println("studentul nu exista");
         }
     }
-
 
 
 }
