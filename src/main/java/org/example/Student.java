@@ -3,11 +3,11 @@ package org.example;
 import java.util.Objects;
 
 public class Student {
-    String numarMatricol;
-    String prenume;
-    String nume;
-    String formatieDeStudiu;
-    Integer nota;
+   final String numarMatricol;
+   final String prenume;
+   final String nume;
+   final String formatieDeStudiu;
+ //  final Integer nota;
 
 
 //    @Override
@@ -15,20 +15,11 @@ public class Student {
 //        return this.nume.compareTo(o.nume);
 //    }
 
-    public Student( String numarMatricol, String prenume, String nume, String formatieDeStudiu) {
+    public Student(String numarMatricol, String prenume, String nume, String formatieDeStudiu) {
         this.prenume = prenume;
         this.nume = nume;
         this.numarMatricol = numarMatricol;
         this.formatieDeStudiu = formatieDeStudiu;
-
-    }
-    public Student( String numarMatricol, String prenume, String nume, String formatieDeStudiu, Integer nota) {
-        this.prenume = prenume;
-        this.nume = nume;
-        this.numarMatricol = numarMatricol;
-        this.formatieDeStudiu = formatieDeStudiu;
-        this.nota=nota;
-
     }
 
     @Override

@@ -140,6 +140,23 @@ public class Main {
         Student studentCautatFaraNrMatricol = new Student(null, "Andreea", "Popescu", "221");
 
         printNota(mapNoteStudenti, studentCautatFaraNrMatricol);
+
+
+
+
+        List<Student> lista = new ArrayList<>();
+        lista.add(new Student("0123", "Andreea", "Popescu", "221"));
+        lista.add(new Student("4567", "Maria", "Ionescu", "212"));
+
+        ExporterConfiguration conf1 = new ExporterConfiguration("Lista1.csv", "lista1");
+        ExporterConfiguration conf2 = new ExporterConfiguration("Lista2.csv", "lista2");
+
+        Exporter e1 = new Exporter(conf1, lista);
+        Exporter e2 = new Exporter(conf2, lista);
+        e1.export();
+        e2.export();
+
+
     }
 
     public static Integer nota(Map<String, Integer> note, Student s) {
@@ -274,6 +291,9 @@ public class Main {
             System.out.println("studentul nu exista");
         }
     }
+
+
+
 
 
 }
