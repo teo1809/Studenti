@@ -4,7 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
    /*
     1) lista cu studenti
     2) o functie care returneaza true daca un student e prezent (se afla in lista)
@@ -90,74 +96,103 @@ public class Main {
     public static void main(String[] args) {
         //Student student = new Student("3572", "Teodora", "Olteanu", "221");
         // System.out.println(student);
-        List<Student> listaDinFisier = citireStudenti("studenti.csv");
+//        List<Student> listaDinFisier = citireStudenti("studenti.csv");
+//
+//
+//        afisareListaNormala(listaDinFisier);
+//
+//
+//        sortareDupaNumeSiFormatiune(listaDinFisier);
+//
+//        //exportaStudentiExcel(listaDinFisier, "Catalog_Studenti.xlsx");
+//
+//        afisareListaSortata(listaDinFisier);
+//
+//        Map<String, Integer> citireNote = citireNote("noteStudenti.csv");
+//
+//        for (Map.Entry<String, Integer> intrare : citireNote.entrySet()) {
+//            System.out.println("Student: " + intrare.getKey() + " Nota: " + intrare.getValue());
+//        }
 
+//        List<Student> listaStudenti = new ArrayList<>();
+//        listaStudenti.add(new Student("0123", "Andreea", "Popescu", "221"));
+//        listaStudenti.add(new Student("4567", "Maria", "Ionescu", "212"));
+//        listaStudenti.add(new Student("9103", "Andrei", "Traian", "211"));
+//        listaStudenti.add(new Student("6216", "Gabriela", "Manole", "222"));
 
-        afisareListaNormala(listaDinFisier);
-
-        sortareDupaNumeSiFormatiune(listaDinFisier);
-
-        afisareListaSortata(listaDinFisier);
-
-        Map<String, Integer> citireNote = citireNote("noteStudenti.csv");
-
-        for (Map.Entry<String, Integer> intrare : citireNote.entrySet()) {
-            System.out.println("Student: " + intrare.getKey() + " Nota: " + intrare.getValue());
-        }
-
-        List<Student> listaStudenti = new ArrayList<>();
-        listaStudenti.add(new Student("0123", "Andreea", "Popescu", "221"));
-        listaStudenti.add(new Student("4567", "Maria", "Ionescu", "212"));
-        listaStudenti.add(new Student("9103", "Andrei", "Traian", "211"));
-        listaStudenti.add(new Student("6216", "Gabriela", "Manole", "222"));
-
-        Set<Student> setStudenti = new HashSet<>(listaStudenti);
+  //      Set<Student> setStudenti = new HashSet<>(listaStudenti);
 
 //        setStudenti.add(new Student("Andreea", "Popescu", "0123", "221"));
 //        setStudenti.add(new Student("Maria", "Ionescu", "4567", "212"));
 //        setStudenti.add(new Student("Andrei", "Traian", "9103", "211"));
 //        setStudenti.add(new Student("Gabriela", "Manole", "6216", "222"));
-        Student studentCautat = new Student("0123", "Andreea", "Popescu", "221");
+//        Student studentCautat = new Student("0123", "Andreea", "Popescu", "221");
+//
+//        System.out.println();
+//        if (prezenta(setStudenti, studentCautat)) {
+//            System.out.println("Studentul este prezent!");
+//        } else {
+//            System.out.println("Studentul NU este prezent!");
+//        }
+//
+//        Integer notaStudent = nota(citireNote, studentCautat);
+//
+//        if (notaStudent != null) {
+//            System.out.println("Nota studentului " + studentCautat.getNume() + " este: " + notaStudent);
+//        } else {
+//            System.out.println("nu exista o nota pentru acest student! " + studentCautat.getNumarMatricol());
+//        }
+//
+//        // map pentru cautarea studentului fara nrMatricol
+//        Map<Student, Integer> mapNoteStudenti = createMapNoteStudenti(listaDinFisier, citireNote);
+//
+//        Student studentCautatFaraNrMatricol = new Student(null, "Andreea", "Popescu", "221");
+//
+//        printNota(mapNoteStudenti, studentCautatFaraNrMatricol);
 
-        System.out.println();
-        if (prezenta(setStudenti, studentCautat)) {
-            System.out.println("Studentul este prezent!");
-        } else {
-            System.out.println("Studentul NU este prezent!");
+
+//
+//
+//        List<Student> lista = new ArrayList<>();
+//        lista.add(new Student("0123", "Andreea", "Popescu", "221"));
+//        lista.add(new Student("4567", "Maria", "Ionescu", "212"));
+//
+//        ExporterConfiguration conf1 = new ExporterConfiguration("Lista1.csv", "lista1");
+//        ExporterConfiguration conf2 = new ExporterConfiguration("Lista2.csv", "lista2");
+//
+//        Exporter e1 = new Exporter(conf1, lista);
+//        Exporter e2 = new Exporter(conf2, lista);
+//        e1.export();
+//        e2.export();
+
+
+        Map<String, Integer> noteDinCsv = citireNote("noteStudenti.csv");
+
+        ImporterInterface importator = new ImportFromExcel("Catalog_Studenti.xlsx");
+
+        List<Student> listaStudentiExcel = new ArrayList<>();
+
+        listaStudentiExcel.addAll(importator.importStudenti("Sheet1"));
+        listaStudentiExcel.addAll(importator.importStudenti("Sheet2"));
+
+        System.out.println("Am importat un total de " + listaStudentiExcel.size() + " studenti din toate sheet-urile.");
+
+        for (Student s : listaStudentiExcel) {
+            Integer nota = noteDinCsv.get(s.getNumarMatricol());
+
+            System.out.println(s.getNume() + " " + s.getPrenume() +
+                    " (Matricol: " + s.getNumarMatricol() + ") " +
+                    " Nota: " + (nota != null ? nota : "nu exista"));
         }
 
-        Integer notaStudent = nota(citireNote, studentCautat);
+        ExporterInterface exportator = new ExportToExcel("CatalogFinal.xlsx");
+        exportator.exportStudenti(listaStudentiExcel);
 
-        if (notaStudent != null) {
-            System.out.println("Nota studentului " + studentCautat.getNume() + " este: " + notaStudent);
-        } else {
-            System.out.println("nu exista o nota pentru acest student! " + studentCautat.getNumarMatricol());
-        }
-
-        // map pentru cautarea studentului fara nrMatricol
-        Map<Student, Integer> mapNoteStudenti = createMapNoteStudenti(listaDinFisier, citireNote);
-
-        Student studentCautatFaraNrMatricol = new Student(null, "Andreea", "Popescu", "221");
-
-        printNota(mapNoteStudenti, studentCautatFaraNrMatricol);
-
-
-
-
-        List<Student> lista = new ArrayList<>();
-        lista.add(new Student("0123", "Andreea", "Popescu", "221"));
-        lista.add(new Student("4567", "Maria", "Ionescu", "212"));
-
-        ExporterConfiguration conf1 = new ExporterConfiguration("Lista1.csv", "lista1");
-        ExporterConfiguration conf2 = new ExporterConfiguration("Lista2.csv", "lista2");
-
-        Exporter e1 = new Exporter(conf1, lista);
-        Exporter e2 = new Exporter(conf2, lista);
-        e1.export();
-        e2.export();
+        System.out.println("Exportul final in CatalogFinal.xlsx a fost realizat cu succes.");
 
 
     }
+
 
     public static Integer nota(Map<String, Integer> note, Student s) {
         return note.get(s.getNumarMatricol());
@@ -293,8 +328,46 @@ public class Main {
     }
 
 
-
-
+//    public static void exportaStudentiExcel(List<Student> listaStudenti, String numeFisier) {
+//        XSSFWorkbook workbook = new XSSFWorkbook();
+//        XSSFSheet sheet = workbook.createSheet("Student Details");
+//
+//        Map<String, Object[]> data = new TreeMap<>();
+//        data.put("1", new Object[]{"NR. MATRICOL", "PRENUME", "NUME", "FORMATIUNE"});
+//
+//        int i = 2;
+//        for (Student s : listaStudenti) {
+//            data.put(String.valueOf(i), new Object[]{
+//                    s.getNumarMatricol(),
+//                    s.getPrenume(),
+//                    s.getNume(),
+//                    s.getFormatieDeStudiu()
+//            });
+//            i++;
+//        }
+//        int rowNum = 0;
+//        for (String key : data.keySet()) {
+//            Row row = sheet.createRow(rowNum++);
+//            Object[] objArr = data.get(key);
+//            int cellNum = 0;
+//            for (Object obj : objArr) {
+//                Cell cell = row.createCell(cellNum++);
+//                if (obj instanceof String)
+//                    cell.setCellValue((String) obj);
+//                else if (obj instanceof Integer)
+//                    cell.setCellValue((Integer) obj);
+//                else if (obj == null)
+//                    cell.setCellValue("");
+//            }
+//        }
+//
+//        try (FileOutputStream out = new FileOutputStream(numeFisier)) {
+//            workbook.write(out);
+//            System.out.println(numeFisier + " written successfully.");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
 
