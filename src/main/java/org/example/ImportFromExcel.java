@@ -20,6 +20,7 @@ public class ImportFromExcel implements ImporterInterface {
         return importStudenti(null);
     }
 
+    @Override
     public List<Student> importStudenti(String sheetName) {
         List<Student> studenti = new ArrayList<>();
 
@@ -29,30 +30,24 @@ public class ImportFromExcel implements ImporterInterface {
             XSSFSheet sheet = (sheetName == null) ? workbook.getSheetAt(0) : workbook.getSheet(sheetName);
             if (sheet == null) return studenti;
 
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
+            for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue;
 
-                List<String> rowData = new ArrayList<>();
-                Iterator<Cell> cellIterator = row.cellIterator();
-
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            rowData.add(cell.getStringCellValue());
-                            break;
-                        case NUMERIC:
-                            rowData.add(String.valueOf((int) cell.getNumericCellValue()));
-                            break;
-                        default:
-                            break;
-                    }
+                if (row.getCell(0) == null || row.getCell(0).getCellType() == CellType.BLANK) {
+                    continue;
                 }
+                Cell c0 = row.getCell(0);
+                Cell c1 = row.getCell(1);
+                Cell c2 = row.getCell(2);
+                Cell c3 = row.getCell(3);
 
-                if (rowData.size() >= 4) {
-                    studenti.add(new Student(rowData.get(0), rowData.get(1), rowData.get(2), rowData.get(3)));
+                if (c0 != null && c1 != null && c2 != null && c3 != null) {
+                    String nrMatricol = (c0.getCellType() == CellType.NUMERIC) ? String.valueOf((int) c0.getNumericCellValue()) : c0.getStringCellValue();
+                    String prenume = (c1.getCellType() == CellType.NUMERIC) ? String.valueOf((int) c1.getNumericCellValue()) : c1.getStringCellValue();
+                    String nume = (c2.getCellType() == CellType.NUMERIC) ? String.valueOf((int) c2.getNumericCellValue()) : c2.getStringCellValue();
+                    String formatie = (c3.getCellType() == CellType.NUMERIC) ? String.valueOf((int) c3.getNumericCellValue()) : c3.getStringCellValue();
+
+                    studenti.add(new Student(nrMatricol.trim(), prenume.trim(), nume.trim(), formatie.trim()));
                 }
             }
         } catch (IOException e) {
@@ -66,6 +61,7 @@ public class ImportFromExcel implements ImporterInterface {
         return importNote(null);
     }
 
+    @Override
     public Map<String, Integer> importNote(String sheetName) {
         Map<String, Integer> noteMap = new HashMap<>();
 
@@ -75,32 +71,28 @@ public class ImportFromExcel implements ImporterInterface {
             XSSFSheet sheet = (sheetName == null) ? workbook.getSheetAt(0) : workbook.getSheet(sheetName);
             if (sheet == null) return noteMap;
 
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
+            for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue;
 
-                String nrMatricol = "";
-                Integer nota = 0;
-                Iterator<Cell> cellIterator = row.cellIterator();
-                int colIndex = 0;
+                Cell c0 = row.getCell(0); // nr Matricol
+                Cell c1 = row.getCell(1); // nota
 
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    if (colIndex == 0) {
-                        if (cell.getCellType() == CellType.STRING) nrMatricol = cell.getStringCellValue();
-                        else if (cell.getCellType() == CellType.NUMERIC) nrMatricol = String.valueOf((int)cell.getNumericCellValue());
-                    } else if (colIndex == 1) {
-                        if (cell.getCellType() == CellType.NUMERIC) nota = (int) cell.getNumericCellValue();
-                        else if (cell.getCellType() == CellType.STRING) nota = Integer.parseInt(cell.getStringCellValue());
+                if (c0 != null && c1 != null) {
+                    String nrMatricol = (c0.getCellType() == CellType.NUMERIC) ? String.valueOf((int) c0.getNumericCellValue()) : c0.getStringCellValue();
+
+                    int nota = 0;
+                    if (c1.getCellType() == CellType.NUMERIC) {
+                        nota = (int) c1.getNumericCellValue();
+                    } else if (c1.getCellType() == CellType.STRING) {
+                        nota = Integer.parseInt(c1.getStringCellValue().trim());
                     }
-                    colIndex++;
-                }
-                if (!nrMatricol.isEmpty()) {
-                    noteMap.put(nrMatricol, nota);
+
+                    if (!nrMatricol.isEmpty()) {
+                        noteMap.put(nrMatricol.trim(), nota);
+                    }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
         return noteMap;

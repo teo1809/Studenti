@@ -23,12 +23,12 @@ public class ExportToExcel implements ExporterInterface {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Studenti");
 
-        Map<String, Object[]> data = new TreeMap<>();
-        data.put("1", new Object[]{"NR. MATRICOL", "PRENUME", "NUME", "FORMATIUNE"});
+        Map<Integer, Object[]> data = new TreeMap<>();
+        data.put(1, new Object[]{"NR. MATRICOL", "PRENUME", "NUME", "FORMATIUNE"});
 
         int i = 2;
         for (Student s : studenti) {
-            data.put(String.valueOf(i++), new Object[]{
+            data.put(i++, new Object[]{
                     s.getNumarMatricol(), s.getPrenume(), s.getNume(), s.getFormatieDeStudiu()
             });
         }
@@ -36,9 +36,9 @@ public class ExportToExcel implements ExporterInterface {
         scriereEfectiva(workbook, sheet, data);
     }
 
-    private void scriereEfectiva(XSSFWorkbook workbook, XSSFSheet sheet, Map<String, Object[]> data) {
+    private void scriereEfectiva(XSSFWorkbook workbook, XSSFSheet sheet, Map<Integer, Object[]> data) {
         int rowNum = 0;
-        for (String key : data.keySet()) {
+        for (Integer key : data.keySet()) {
             Row row = sheet.createRow(rowNum++);
             Object[] objArr = data.get(key);
             int cellNum = 0;

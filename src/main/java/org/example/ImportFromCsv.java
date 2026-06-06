@@ -20,7 +20,7 @@ public class ImportFromCsv implements ImporterInterface {
         String fisierDeCitit = (sursa == null) ? this.filename : sursa;
 
         try (Scanner scanner = new Scanner(new File(fisierDeCitit))) {
-            if (scanner.hasNextLine()) scanner.nextLine();
+           // if (scanner.hasNextLine()) scanner.nextLine();
 
             while (scanner.hasNextLine()) {
                 String linie = scanner.nextLine();
@@ -46,7 +46,7 @@ public class ImportFromCsv implements ImporterInterface {
         String fisierDeCitit = (sursa == null) ? this.filename : sursa;
 
         try (Scanner scanner = new Scanner(new File(fisierDeCitit))) {
-            if (scanner.hasNextLine()) scanner.nextLine();
+           // if (scanner.hasNextLine()) scanner.nextLine();
 
             while (scanner.hasNextLine()) {
                 String linie = scanner.nextLine();
